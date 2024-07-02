@@ -2,8 +2,7 @@ import axios from 'axios';
 import 'dotenv/config'
 
 
-const apiKey = process.env.API_KEY
-const apiURL = "https://api.weatherapi.com/v1";
+const apiURL = process.env.API_URL;
 
 //  axios has different response structure to our Lambda function
 // the respondFrom function converts the axios response to what we need for the tests
@@ -23,6 +22,7 @@ const makeHttpRequest = async (
   headers: { accept: string },
   data?: any
 ) => {
+  console.log(url)
   try {
     const resp = await axios.request({ method, url, headers, data });
 
