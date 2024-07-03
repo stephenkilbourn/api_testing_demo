@@ -1,0 +1,296 @@
+{
+	"info": {
+		"_postman_id": "78031c15-21ed-402b-bad9-5b75cd7c10c5",
+		"name": "forecast Weather",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15865584"
+	},
+	"item": [
+		{
+			"name": "Invoke should return a 200 response",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var Ajv = require(\"ajv\"),",
+							"    ajv = new Ajv({logger: console});",
+							"const weatherSchema = {",
+							"    \"type\": \"object\",",
+							"    \"properties\": {",
+							"        \"location\": {",
+							"            \"type\": \"object\",",
+							"            \"properties\": {",
+							"                \"name\": { \"type\": \"string\" },",
+							"                \"region\": { \"type\": \"string\" },",
+							"                \"country\": { \"type\": \"string\" },",
+							"                \"lat\": { \"type\": \"number\" },",
+							"                \"lon\": { \"type\": \"number\" },",
+							"                \"tz_id\": { \"type\": \"string\" },",
+							"                \"localtime_epoch\": { \"type\": \"number\" },",
+							"                \"localtime\": { \"type\": \"string\" }",
+							"            }",
+							"        },",
+							"        \"current\": {",
+							"            \"type\": \"object\",",
+							"            \"properties\": {",
+							"                \"last_updated_epoch\": { \"type\": \"number\" },",
+							"                \"last_updated\": { \"type\": \"string\" },",
+							"                \"temp_c\": { \"type\": \"number\" },",
+							"                \"temp_f\": { \"type\": \"number\" },",
+							"                \"is_day\": { \"type\": \"number\" },",
+							"                \"condition\": {",
+							"                    \"type\": \"object\",",
+							"                    \"properties\": {",
+							"                        \"text\": { \"type\": \"string\" },",
+							"                        \"icon\": { \"type\": \"string\" },",
+							"                        \"code\": { \"type\": \"number\" }",
+							"                    }",
+							"                },",
+							"                \"wind_mph\": { \"type\": \"number\" },",
+							"                \"wind_kph\": { \"type\": \"number\" },",
+							"                \"wind_degree\": { \"type\": \"number\" },",
+							"                \"wind_dir\": { \"type\": \"string\" },",
+							"                \"pressure_mb\": { \"type\": \"number\" },",
+							"                \"pressure_in\": { \"type\": \"number\" },",
+							"                \"precip_mm\": { \"type\": \"number\" },",
+							"                \"precip_in\": { \"type\": \"number\" },",
+							"                \"humidity\": { \"type\": \"number\" },",
+							"                \"cloud\": { \"type\": \"number\" },",
+							"                \"feelslike_c\": { \"type\": \"number\" },",
+							"                \"feelslike_f\": { \"type\": \"number\" },",
+							"                \"windchill_c\": { \"type\": \"number\" },",
+							"                \"windchill_f\": { \"type\": \"number\" },",
+							"                \"heatindex_c\": { \"type\": \"number\" },",
+							"                \"heatindex_f\": { \"type\": \"number\" },",
+							"                \"dewpoint_c\": { \"type\": \"number\" },",
+							"                \"dewpoint_f\": { \"type\": \"number\" },",
+							"                \"vis_km\": { \"type\": \"number\" },",
+							"                \"vis_miles\": { \"type\": \"number\" },",
+							"                \"uv\": { \"type\": \"number\" },",
+							"                \"gust_mph\": { \"type\": \"number\" },",
+							"                \"gust_kph\": { \"type\": \"number\" }",
+							"            }",
+							"        }",
+							"    }",
+							"};",
+							"",
+							"const daySchema = {",
+							"    \"type\": \"object\",",
+							"    \"properties\": {",
+							"        \"date\": {\"type\": \"string\"},",
+							"        \"date_epoch\": {\"type\": \"integer\"},",
+							"        \"day\": {\"type\": \"object\"},",
+							"        \"astro\": {\"type\": \"object\" },",
+							"        \"hour\": {\"type\": \"array\" },",
+							"    }",
+							"}",
+							"",
+							"pm.test(\"Response should be a 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    ",
+							"})",
+							"",
+							"pm.test(\"should return the location in the response\", function () {",
+							"    pm.response.to.have.jsonBody();",
+							"    const responseData = pm.response.json();",
+							"    pm.expect(responseData.location.name).to.eql(pm.variables.get(\"location\"));",
+							"})",
+							"",
+							"pm.test(\"should return the current weather with expected keys\", function () {",
+							"    const responseData = pm.response.json();",
+							"    pm.expect(ajv.validate(weatherSchema, responseData)).to.be.true;",
+							"})",
+							"",
+							"pm.test(\"should return an array of forecast days\", function () {",
+							"    const responseData = pm.response.json();",
+							"    pm.expect(responseData.forecast.forecastday.length).to.eql(parseInt(pm.variables.get(\"forecastLength\")));",
+							"})",
+							"",
+							"pm.test(\"each forecast day should have expected properties\", function () {",
+							"    const responseData = pm.response.json();",
+							"    const forecastday = responseData.forecast.forecastday;",
+							"    for( const day of forecastday) {",
+							"        pm.expect(ajv.validate(daySchema, day)).to.be.true;",
+							"    }",
+							"})",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{apiURL}}/forecast.json?q={{location}}&days={{forecastLength}}&key={{apiKey}}",
+					"host": [
+						"{{apiURL}}"
+					],
+					"path": [
+						"forecast.json"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "{{location}}",
+							"description": "location"
+						},
+						{
+							"key": "days",
+							"value": "{{forecastLength}}"
+						},
+						{
+							"key": "key",
+							"value": "{{apiKey}}",
+							"description": "apiKey"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "when we have empty q parameter",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response should be a 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"})",
+							"",
+							"pm.test(\"code should be 1003\", function () {",
+							"    const responseData = pm.response.json();",
+							"    pm.expect(responseData.error.code).to.eql(1003);",
+							"})",
+							"",
+							"pm.test(\"message should indicate that q is missing\", function () {",
+							"    const responseData = pm.response.json();",
+							"    pm.expect(responseData.error.message).to.eql(\"Parameter q is missing.\");",
+							"})",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{apiURL}}/current.json?q=&key={{apiKey}}",
+					"host": [
+						"{{apiURL}}"
+					],
+					"path": [
+						"current.json"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "",
+							"description": "location"
+						},
+						{
+							"key": "key",
+							"value": "{{apiKey}}",
+							"description": "apiKey"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "when we are missing an API Key",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response should be a 403\", function () {",
+							"    pm.response.to.have.status(403);",
+							"})",
+							"",
+							"pm.test(\"code should be 1003\", function () {",
+							"    const responseData = pm.response.json();",
+							"    pm.expect(responseData.error.code).to.eql(2008);",
+							"})",
+							"",
+							"pm.test(\"message should indicate that q is missing\", function () {",
+							"    const responseData = pm.response.json();",
+							"    pm.expect(responseData.error.message).to.eql(\"API key has been disabled.\");",
+							"})",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{apiURL}}/current.json?q=&key=1234765",
+					"host": [
+						"{{apiURL}}"
+					],
+					"path": [
+						"current.json"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "",
+							"description": "location"
+						},
+						{
+							"key": "key",
+							"value": "1234765",
+							"description": "apiKey"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "location",
+			"value": "Hamilton"
+		},
+		{
+			"key": "forecastLength",
+			"value": "2"
+		}
+	]
+}
