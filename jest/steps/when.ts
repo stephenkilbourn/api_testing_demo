@@ -22,7 +22,6 @@ const makeHttpRequest = async (
   headers: { accept: string },
   data?: any
 ) => {
-  console.log(url)
   try {
     const resp = await axios.request({ method, url, headers, data });
 

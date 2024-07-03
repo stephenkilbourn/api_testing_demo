@@ -4,7 +4,9 @@
   "description": "demo of interacting with apis via postman, playwright, or jest",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test:jest": "jest",
+    "test:pw": "playwright test",
+    "test:postman": "node ./newman/postmanWeather.test.js"
   },
   "author": "stephen kilbourn",
   "license": "ISC",
