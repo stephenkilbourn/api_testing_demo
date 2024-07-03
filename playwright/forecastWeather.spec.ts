@@ -63,7 +63,7 @@ test.describe('given an authenticated user', () => {
         })
     });
 
-    test('should return n array of forecast days', async ({request}) => {
+    test('should return an array of forecast days', async ({request}) => {
       const resp = await we_invoke_get_forecast(request, location, forecastLength, an_authenticated_user);
       const body = await resp.json();
 
