@@ -7,7 +7,7 @@ export default defineConfig({
   use: {
     baseURL: process.env.API_URL,
     ignoreHTTPSErrors: true,
-    trace: "retain-on-failure",
+    trace: "on",
   },
   testDir: './playwright',
   fullyParallel: true,

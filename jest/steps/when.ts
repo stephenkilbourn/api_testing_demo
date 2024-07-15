@@ -51,7 +51,6 @@ const we_invoke_get_forecast = async (location?: string, days?: Number, apiKey?:
   const headers = {
     accept: 'application/json',
   };
-  // forecast.json?q=59840&days=6&key=
   const method = 'GET';
   const path = 'forecast.json';
   const url = `${apiURL}/${path}?q=${location}&days=${days?.toString()}${apiKey ? `&key=${apiKey}` : ''}`;

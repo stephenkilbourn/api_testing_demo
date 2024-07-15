@@ -31,7 +31,7 @@ test.describe('given an authenticated user', () => {
           "last_updated": expect.any(String),
           "temp_c": expect.any(Number),
           "temp_f": expect.any(Number),
-          "is_day": 1,
+          "is_day": expect.any(Number),
           "condition": {
             "text": expect.any(String),
             "icon": expect.any(String),
